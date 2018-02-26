@@ -1,7 +1,8 @@
+import GUI.Dot;
+import GUI.Field;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -38,10 +39,12 @@ public class Main extends Application implements EventHandler<ActionEvent>{
             root.getChildren().add(field);
         }
 
+        setCircles(root);
+
         button = new Button("Start");
         button.setOnAction(this);
-        button.setLayoutX(0);
-        button.setLayoutY(450);
+        button.setLayoutX(50);
+        button.setLayoutY(475);
 
         root.getChildren().add(button);
         return root;
@@ -67,5 +70,171 @@ public class Main extends Application implements EventHandler<ActionEvent>{
             alert.setContentText("This TextBox will be replaced by Algorithm");
             alert.showAndWait();
         }
+    }
+
+    private void setCircles (Pane root){
+
+        Dot dot;
+
+        dot = new Dot("0");
+        dot.setTranslateX(400-dot.getRadius());
+        dot.setTranslateY(50-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("2");
+        dot.setTranslateX(200-dot.getRadius());
+        dot.setTranslateY(50-dot.getRadius());
+        root.getChildren().add(dot);
+
+        dot = new Dot("4");
+        dot.setTranslateX(400-dot.getRadius());
+        dot.setTranslateY(100-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("1");
+        dot.setTranslateX(350-dot.getRadius());
+        dot.setTranslateY(100-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("2");
+        dot.setTranslateX(250-dot.getRadius());
+        dot.setTranslateY(100-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("1");
+        dot.setTranslateX(150-dot.getRadius());
+        dot.setTranslateY(100-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("2");
+        dot.setTranslateX(100-dot.getRadius());
+        dot.setTranslateY(100-dot.getRadius());
+        root.getChildren().add(dot);
+
+        dot = new Dot("1");
+        dot.setTranslateX(450-dot.getRadius());
+        dot.setTranslateY(150-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("2");
+        dot.setTranslateX(350-dot.getRadius());
+        dot.setTranslateY(150-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("1");
+        dot.setTranslateX(250-dot.getRadius());
+        dot.setTranslateY(150-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("1");
+        dot.setTranslateX(200-dot.getRadius());
+        dot.setTranslateY(150-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("0");
+        dot.setTranslateX(50-dot.getRadius());
+        dot.setTranslateY(150-dot.getRadius());
+        root.getChildren().add(dot);
+
+        dot = new Dot("3");
+        dot.setTranslateX(400-dot.getRadius());
+        dot.setTranslateY(200-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("1");
+        dot.setTranslateX(300-dot.getRadius());
+        dot.setTranslateY(200-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("4");
+        dot.setTranslateX(250-dot.getRadius());
+        dot.setTranslateY(200-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("2");
+        dot.setTranslateX(150-dot.getRadius());
+        dot.setTranslateY(200-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("1");
+        dot.setTranslateX(100-dot.getRadius());
+        dot.setTranslateY(200-dot.getRadius());
+        root.getChildren().add(dot);
+
+        dot = new Dot("1");
+        dot.setTranslateX(450-dot.getRadius());
+        dot.setTranslateY(250-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("1");
+        dot.setTranslateX(400-dot.getRadius());
+        dot.setTranslateY(250-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("1");
+        dot.setTranslateX(100-dot.getRadius());
+        dot.setTranslateY(250-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("2");
+        dot.setTranslateX(50-dot.getRadius());
+        dot.setTranslateY(250-dot.getRadius());
+        root.getChildren().add(dot);
+
+        dot = new Dot("1");
+        dot.setTranslateX(400-dot.getRadius());
+        dot.setTranslateY(300-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("2");
+        dot.setTranslateX(350-dot.getRadius());
+        dot.setTranslateY(300-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("1");
+        dot.setTranslateX(250-dot.getRadius());
+        dot.setTranslateY(300-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("2");
+        dot.setTranslateX(200-dot.getRadius());
+        dot.setTranslateY(300-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("2");
+        dot.setTranslateX(100-dot.getRadius());
+        dot.setTranslateY(300-dot.getRadius());
+        root.getChildren().add(dot);
+
+        dot = new Dot("1");
+        dot.setTranslateX(450-dot.getRadius());
+        dot.setTranslateY(350-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("2");
+        dot.setTranslateX(300-dot.getRadius());
+        dot.setTranslateY(350-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("2");
+        dot.setTranslateX(250-dot.getRadius());
+        dot.setTranslateY(350-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("2");
+        dot.setTranslateX(150-dot.getRadius());
+        dot.setTranslateY(350-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("0");
+        dot.setTranslateX(50-dot.getRadius());
+        dot.setTranslateY(350-dot.getRadius());
+        root.getChildren().add(dot);
+
+        dot = new Dot("2");
+        dot.setTranslateX(400-dot.getRadius());
+        dot.setTranslateY(400-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("3");
+        dot.setTranslateX(350-dot.getRadius());
+        dot.setTranslateY(400-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("3");
+        dot.setTranslateX(250-dot.getRadius());
+        dot.setTranslateY(400-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("2");
+        dot.setTranslateX(150-dot.getRadius());
+        dot.setTranslateY(400-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("1");
+        dot.setTranslateX(100-dot.getRadius());
+        dot.setTranslateY(400-dot.getRadius());
+        root.getChildren().add(dot);
+
+        dot = new Dot("2");
+        dot.setTranslateX(300-dot.getRadius());
+        dot.setTranslateY(450-dot.getRadius());
+        root.getChildren().add(dot);
+        dot = new Dot("2");
+        dot.setTranslateX(100-dot.getRadius());
+        dot.setTranslateY(450-dot.getRadius());
+        root.getChildren().add(dot);
     }
 }
