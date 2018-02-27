@@ -1,5 +1,6 @@
 import GUI.Dot;
 import GUI.Field;
+import GUI.Stroke;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
