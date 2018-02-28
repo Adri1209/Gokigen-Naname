@@ -58,6 +58,7 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 
         scene = new Scene(createContent());
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
