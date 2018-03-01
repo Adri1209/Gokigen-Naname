@@ -6,134 +6,200 @@ import static sun.awt.geom.Crossings.debug;
 
 public class Backtracking {
 
-    private ArrayList<Box> boxes = new ArrayList<>();
+    private Box[][] boxes = new Box[8][8];
+    private ArrayList<Point> points = new ArrayList<>();
 
 
-    private void fillBoxList() {
-
-        boxes.add(new Box("1", new Point[]{new Point("3", 2, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("2", new Point[]{new Point("3", 2, Position.DOWNLEFT), new Point("4", 1, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("3", new Point[]{new Point("4", 1, Position.DOWNLEFT), new Point("1", 2, Position.UPRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("4", new Point[]{new Point("1", 2, Position.UPLEFT), new Point("5", 2, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("5", new Point[]{new Point("5", 2, Position.DOWNLEFT)}, Line.EMPTY));
-        boxes.add(new Box("6", new Point[]{new Point("6", 1, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("7", new Point[]{new Point("6", 1, Position.DOWNRIGHT), new Point("2", 0, Position.UPRIGHT), new Point("7", 4, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("8", new Point[]{new Point("2", 0, Position.UPLEFT), new Point("7", 4, Position.DOWNLEFT)}, Line.EMPTY));
-
-        boxes.add(new Box("9", new Point[]{new Point("8", 0, Position.DOWNLEFT), new Point("3", 2, Position.UPRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("10", new Point[]{new Point("3", 2, Position.UPLEFT), new Point("4", 1, Position.UPRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("11", new Point[]{new Point("4", 1, Position.UPLEFT), new Point("9", 1, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("12", new Point[]{new Point("9", 1, Position.DOWNLEFT), new Point("10", 1, Position.DOWNRIGHT), new Point("5", 2, Position.UPRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("13", new Point[]{new Point("5", 2, Position.UPLEFT), new Point("10", 1, Position.DOWNLEFT)}, Line.EMPTY));
-        boxes.add(new Box("14", new Point[]{new Point("6", 1, Position.UPRIGHT), new Point("11", 2, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("15", new Point[]{new Point("6", 1, Position.UPLEFT), new Point("11", 2, Position.DOWNLEFT), new Point("7", 4, Position.UPRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("16", new Point[]{new Point("7", 4, Position.UPLEFT), new Point("12", 1, Position.DOWNRIGHT)}, Line.EMPTY));
-
-        boxes.add(new Box("17", new Point[]{new Point("8", 0, Position.UPLEFT), new Point("13", 1, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("18", new Point[]{new Point("13", 1, Position.DOWNLEFT), new Point("14", 2, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("19", new Point[]{new Point("9", 1, Position.UPRIGHT), new Point("14", 2, Position.DOWNLEFT)}, Line.EMPTY));
-        boxes.add(new Box("20", new Point[]{new Point("9", 1, Position.UPLEFT), new Point("10", 1, Position.UPRIGHT), new Point("15", 4, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("21", new Point[]{new Point("10", 1, Position.UPLEFT), new Point("15", 4, Position.DOWNLEFT), new Point("16", 1, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("22", new Point[]{new Point("11", 2, Position.UPRIGHT), new Point("16", 1, Position.DOWNLEFT)}, Line.EMPTY));
-        boxes.add(new Box("23", new Point[]{new Point("11", 2, Position.UPLEFT), new Point("17", 3, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("24", new Point[]{new Point("12", 1, Position.UPRIGHT), new Point("17", 3, Position.DOWNLEFT)}, Line.EMPTY));
-
-        boxes.add(new Box("25", new Point[]{new Point("13", 1, Position.UPRIGHT), new Point("18", 2, Position.DOWNLEFT), new Point("19", 1, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("26", new Point[]{new Point("13", 1, Position.UPLEFT), new Point("14", 2, Position.UPRIGHT), new Point("19", 1, Position.DOWNLEFT)}, Line.EMPTY));
-        boxes.add(new Box("27", new Point[]{new Point("14", 2, Position.UPLEFT)}, Line.EMPTY));
-        boxes.add(new Box("28", new Point[]{new Point("15", 4, Position.UPRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("29", new Point[]{new Point("15", 4, Position.UPLEFT), new Point("16", 1, Position.UPRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("30", new Point[]{new Point("16", 1, Position.UPLEFT)}, Line.EMPTY));
-        boxes.add(new Box("31", new Point[]{new Point("17", 3, Position.UPRIGHT), new Point("20", 1, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("32", new Point[]{new Point("17", 3, Position.UPLEFT), new Point("20", 1, Position.DOWNLEFT), new Point("21", 1, Position.DOWNRIGHT)}, Line.EMPTY));
-
-        boxes.add(new Box("33", new Point[]{new Point("18", 2, Position.UPLEFT), new Point("19", 1, Position.UPRIGHT), new Point("22", 2, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("34", new Point[]{new Point("19", 1, Position.UPLEFT), new Point("22", 2, Position.DOWNLEFT)}, Line.EMPTY));
-        boxes.add(new Box("35", new Point[]{new Point("23", 2, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("36", new Point[]{new Point("23", 2, Position.DOWNLEFT), new Point("24", 1, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("37", new Point[]{new Point("24", 1, Position.DOWNLEFT)}, Line.EMPTY));
-        boxes.add(new Box("38", new Point[]{new Point("25", 2, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("39", new Point[]{new Point("20", 1, Position.UPRIGHT), new Point("25", 2, Position.DOWNLEFT), new Point("26", 1, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("40", new Point[]{new Point("20", 1, Position.UPLEFT), new Point("21", 1, Position.UPRIGHT), new Point("26", 1, Position.DOWNLEFT)}, Line.EMPTY));
-
-        boxes.add(new Box("41", new Point[]{new Point("22", 2, Position.UPRIGHT), new Point("27", 0, Position.DOWNLEFT)}, Line.EMPTY));
-        boxes.add(new Box("42", new Point[]{new Point("22", 2, Position.UPLEFT), new Point("28", 2, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("43", new Point[]{new Point("23", 2, Position.UPRIGHT), new Point("28", 2, Position.DOWNLEFT)}, Line.EMPTY));
-        boxes.add(new Box("44", new Point[]{new Point("23", 2, Position.UPLEFT), new Point("24", 1, Position.UPRIGHT), new Point("29", 2, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("45", new Point[]{new Point("24", 1, Position.UPLEFT), new Point("29", 2, Position.DOWNLEFT), new Point("30", 2, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("46", new Point[]{new Point("25", 2, Position.UPRIGHT), new Point("30", 2, Position.DOWNLEFT)}, Line.EMPTY));
-        boxes.add(new Box("47", new Point[]{new Point("25", 2, Position.UPLEFT), new Point("26", 1, Position.UPRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("48", new Point[]{new Point("26", 1, Position.UPLEFT), new Point("31", 1, Position.DOWNRIGHT)}, Line.EMPTY));
-
-        boxes.add(new Box("49", new Point[]{new Point("27", 0, Position.UPLEFT), new Point("32", 1, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("50", new Point[]{new Point("28", 2, Position.UPRIGHT), new Point("32", 1, Position.DOWNLEFT), new Point("33", 2, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("51", new Point[]{new Point("28", 2, Position.UPLEFT), new Point("33", 2, Position.DOWNLEFT)}, Line.EMPTY));
-        boxes.add(new Box("52", new Point[]{new Point("29", 2, Position.UPRIGHT), new Point("34", 3, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("53", new Point[]{new Point("29", 2, Position.UPLEFT), new Point("34", 3, Position.DOWNLEFT), new Point("30", 2, Position.UPRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("54", new Point[]{new Point("30", 2, Position.UPLEFT), new Point("35", 3, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("55", new Point[]{new Point("35", 3, Position.DOWNLEFT), new Point("36", 2, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("56", new Point[]{new Point("36", 2, Position.DOWNLEFT), new Point("31", 1, Position.UPRIGHT)}, Line.EMPTY));
-
-        boxes.add(new Box("57", new Point[]{new Point("32", 1, Position.UPRIGHT), new Point("37", 2, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("58", new Point[]{new Point("32", 1, Position.UPLEFT), new Point("33", 2, Position.UPRIGHT), new Point("37", 2, Position.DOWNLEFT)}, Line.EMPTY));
-        boxes.add(new Box("59", new Point[]{new Point("33", 2, Position.UPLEFT)}, Line.EMPTY));
-        boxes.add(new Box("60", new Point[]{new Point("34", 3, Position.UPRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("61", new Point[]{new Point("34", 3, Position.UPLEFT), new Point("38", 2, Position.DOWNRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("62", new Point[]{new Point("38", 2, Position.DOWNLEFT), new Point("35", 3, Position.UPRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("63", new Point[]{new Point("35", 3, Position.UPLEFT), new Point("36", 2, Position.UPRIGHT)}, Line.EMPTY));
-        boxes.add(new Box("64", new Point[]{new Point("36", 2, Position.UPLEFT)}, Line.EMPTY));
-
+    private void createPoints(){
+        points.add(new Point(2));
+        points.add(new Point(0));
+        points.add(new Point(2));
+        points.add(new Point(1));
+        points.add(new Point(2));
+        points.add(new Point(1));
+        points.add(new Point(4));
+        points.add(new Point(0));
+        points.add(new Point(1));
+        points.add(new Point(1));
+        points.add(new Point(2));
+        points.add(new Point(1));
+        points.add(new Point(1));
+        points.add(new Point(2));
+        points.add(new Point(4));
+        points.add(new Point(1));
+        points.add(new Point(3));
+        points.add(new Point(2));
+        points.add(new Point(1));
+        points.add(new Point(1));
+        points.add(new Point(1));
+        points.add(new Point(2));
+        points.add(new Point(2));
+        points.add(new Point(1));
+        points.add(new Point(2));
+        points.add(new Point(1));
+        points.add(new Point(0));
+        points.add(new Point(2));
+        points.add(new Point(2));
+        points.add(new Point(2));
+        points.add(new Point(1));
+        points.add(new Point(1));
+        points.add(new Point(2));
+        points.add(new Point(3));
+        points.add(new Point(3));
+        points.add(new Point(2));
+        points.add(new Point(2));
+        points.add(new Point(2));
     }
 
-    public ArrayList<Box> getBoxesWithLines() {
+
+    private void fillBoxList()
+    {
+
+        createPoints();
+
+        boxes[0][0] = new Box(new PointPosition[]{new PointPosition(Position.DOWNRIGHT,points.get(2))},Line.EMPTY);
+        boxes[0][1] = new Box(new PointPosition[]{new PointPosition(Position.DOWNLEFT,points.get(2)),new PointPosition(Position.DOWNRIGHT,points.get(3))},Line.EMPTY);
+        boxes[0][2] = new Box(new PointPosition[]{new PointPosition(Position.DOWNLEFT,points.get(3)),new PointPosition(Position.UPRIGHT,points.get(0))},Line.EMPTY);
+        boxes[0][3] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT,points.get(1)),new PointPosition(Position.DOWNRIGHT,points.get(4))},Line.EMPTY);
+        boxes[0][4] = new Box(new PointPosition[]{new PointPosition(Position.DOWNLEFT,points.get(4))},Line.EMPTY);
+        boxes[0][5] = new Box(new PointPosition[]{new PointPosition(Position.DOWNRIGHT,points.get(5))},Line.EMPTY);
+        boxes[0][6] = new Box(new PointPosition[]{new PointPosition(Position.DOWNLEFT,points.get(5)), new PointPosition(Position.UPRIGHT,points.get(1)), new PointPosition(Position.DOWNRIGHT,points.get(6))},Line.EMPTY);
+        boxes[0][7] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT,points.get(7)),new PointPosition(Position.DOWNLEFT,points.get(6))},Line.EMPTY);
+
+        boxes[1][0] = new Box(new PointPosition[]{new PointPosition(Position.DOWNLEFT,points.get(7)),new PointPosition(Position.UPRIGHT,points.get(2))},Line.EMPTY);
+        boxes[1][1] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT,points.get(2)),new PointPosition(Position.UPRIGHT,points.get(3))},Line.EMPTY);
+        boxes[1][2] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT,points.get(3)),new PointPosition(Position.DOWNRIGHT,points.get(8))},Line.EMPTY);
+        boxes[1][3] = new Box(new PointPosition[]{new PointPosition(Position.DOWNLEFT,points.get(8)),new PointPosition(Position.DOWNRIGHT,points.get(9)), new PointPosition(Position.UPRIGHT,points.get(4))},Line.EMPTY);
+        boxes[1][4] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT,points.get(4)),new PointPosition(Position.DOWNLEFT,points.get(9))},Line.EMPTY);
+        boxes[1][5] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT,points.get(5)),new PointPosition(Position.DOWNRIGHT,points.get(10))},Line.EMPTY);
+        boxes[1][6] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT,points.get(5)),new PointPosition(Position.DOWNLEFT,points.get(10)), new PointPosition(Position.UPRIGHT, points.get(6))},Line.EMPTY);
+        boxes[1][7] = new Box(new PointPosition[]{new PointPosition(Position.DOWNRIGHT,points.get(11)), new PointPosition(Position.UPLEFT, points.get(6))},Line.EMPTY);
+
+        boxes[2][0] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT,points.get(7)), new PointPosition(Position.DOWNRIGHT, points.get(12))},Line.EMPTY);
+        boxes[2][1] = new Box(new PointPosition[]{new PointPosition(Position.DOWNLEFT,points.get(12)), new PointPosition(Position.DOWNRIGHT, points.get(13))},Line.EMPTY);
+        boxes[2][2] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT,points.get(8)), new PointPosition(Position.UPRIGHT, points.get(13))},Line.EMPTY);
+        boxes[2][3] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT,points.get(8)), new PointPosition(Position.UPRIGHT, points.get(9)), new PointPosition(Position.DOWNRIGHT,points.get(14))},Line.EMPTY);
+        boxes[2][4] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT,points.get(9)), new PointPosition(Position.DOWNLEFT, points.get(14)), new PointPosition(Position.DOWNRIGHT,points.get(15))},Line.EMPTY);
+        boxes[2][5] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT,points.get(10)), new PointPosition(Position.DOWNLEFT, points.get(15))},Line.EMPTY);
+        boxes[2][6] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT,points.get(10)), new PointPosition(Position.DOWNRIGHT, points.get(16))},Line.EMPTY);
+        boxes[2][7] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT,points.get(11)), new PointPosition(Position.DOWNLEFT, points.get(16))},Line.EMPTY);
+
+        boxes[3][0] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT,points.get(12)), new PointPosition(Position.DOWNLEFT, points.get(17)), new PointPosition(Position.DOWNRIGHT,points.get(18))},Line.EMPTY);
+        boxes[3][1] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT,points.get(12)), new PointPosition(Position.UPRIGHT, points.get(13)), new PointPosition(Position.DOWNLEFT,points.get(18))},Line.EMPTY);
+        boxes[3][2] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT,points.get(13))},Line.EMPTY);
+        boxes[3][3] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT,points.get(14))},Line.EMPTY);
+        boxes[3][4] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT,points.get(14)), new PointPosition(Position.UPRIGHT, points.get(15))},Line.EMPTY);
+        boxes[3][5] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(15))},Line.EMPTY);
+        boxes[3][6] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT, points.get(16)), new PointPosition(Position.DOWNRIGHT, points.get(19))},Line.EMPTY);
+        boxes[3][7] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(16)), new PointPosition(Position.DOWNLEFT, points.get(19)), new PointPosition(Position.DOWNRIGHT,points.get(20))},Line.EMPTY);
+
+        boxes[4][0] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(17)), new PointPosition(Position.UPRIGHT, points.get(18)), new PointPosition(Position.DOWNRIGHT,points.get(21))},Line.EMPTY);
+        boxes[4][1] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(18)), new PointPosition(Position.DOWNLEFT,points.get(21))},Line.EMPTY);
+        boxes[4][2] = new Box(new PointPosition[]{new PointPosition(Position.DOWNRIGHT,points.get(22))},Line.EMPTY);
+        boxes[4][3] = new Box(new PointPosition[]{new PointPosition(Position.DOWNLEFT,points.get(22)), new PointPosition(Position.DOWNRIGHT, points.get(23))},Line.EMPTY);
+        boxes[4][4] = new Box(new PointPosition[]{new PointPosition(Position.DOWNLEFT, points.get(23))},Line.EMPTY);
+        boxes[4][5] = new Box(new PointPosition[]{new PointPosition(Position.DOWNRIGHT, points.get(24))},Line.EMPTY);
+        boxes[4][6] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT, points.get(19)), new PointPosition(Position.DOWNLEFT, points.get(24)), new PointPosition(Position.DOWNRIGHT, points.get(25))},Line.EMPTY);
+        boxes[4][7] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(19)), new PointPosition(Position.UPRIGHT, points.get(20)), new PointPosition(Position.DOWNLEFT, points.get(25))},Line.EMPTY);
+
+        boxes[5][0] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT, points.get(21)), new PointPosition(Position.DOWNLEFT, points.get(26))},Line.EMPTY);
+        boxes[5][1] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(21)), new PointPosition(Position.DOWNRIGHT, points.get(27))},Line.EMPTY);
+        boxes[5][2] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT, points.get(22)), new PointPosition(Position.DOWNLEFT, points.get(27))},Line.EMPTY);
+        boxes[5][3] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(22)), new PointPosition(Position.UPRIGHT, points.get(23)), new PointPosition(Position.DOWNRIGHT, points.get(28))},Line.EMPTY);
+        boxes[5][4] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(23)), new PointPosition(Position.DOWNLEFT, points.get(28)), new PointPosition(Position.DOWNRIGHT, points.get(29))},Line.EMPTY);
+        boxes[5][5] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT, points.get(24)), new PointPosition(Position.DOWNLEFT, points.get(29))},Line.EMPTY);
+        boxes[5][6] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(24)), new PointPosition(Position.UPRIGHT, points.get(25))},Line.EMPTY);
+        boxes[5][7] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(25)), new PointPosition(Position.DOWNRIGHT, points.get(30))},Line.EMPTY);
+
+        boxes[6][0] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(26)), new PointPosition(Position.DOWNRIGHT, points.get(31))},Line.EMPTY);
+        boxes[6][1] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT, points.get(27)), new PointPosition(Position.DOWNLEFT, points.get(31))},Line.EMPTY);
+        boxes[6][2] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(27)), new PointPosition(Position.DOWNLEFT, points.get(32))},Line.EMPTY);
+        boxes[6][3] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT, points.get(28)), new PointPosition(Position.DOWNRIGHT, points.get(33))},Line.EMPTY);
+        boxes[6][4] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(28)), new PointPosition(Position.DOWNLEFT, points.get(33)), new PointPosition(Position.UPRIGHT, points.get(29))},Line.EMPTY);
+        boxes[6][5] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(29)), new PointPosition(Position.DOWNRIGHT, points.get(34))},Line.EMPTY);
+        boxes[6][6] = new Box(new PointPosition[]{new PointPosition(Position.DOWNLEFT, points.get(34)), new PointPosition(Position.DOWNRIGHT, points.get(35))},Line.EMPTY);
+        boxes[6][7] = new Box(new PointPosition[]{new PointPosition(Position.DOWNLEFT, points.get(35)), new PointPosition(Position.UPRIGHT, points.get(30))},Line.EMPTY);
+
+        boxes[7][0] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT, points.get(31)), new PointPosition(Position.DOWNRIGHT, points.get(36))},Line.EMPTY);
+        boxes[7][1] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(31)), new PointPosition(Position.UPRIGHT, points.get(32)), new PointPosition(Position.DOWNLEFT, points.get(36))},Line.EMPTY);
+        boxes[7][2] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(32))},Line.EMPTY);
+        boxes[7][3] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT, points.get(33))},Line.EMPTY);
+        boxes[7][4] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(33)), new PointPosition(Position.DOWNRIGHT, points.get(37))},Line.EMPTY);
+        boxes[7][5] = new Box(new PointPosition[]{new PointPosition(Position.DOWNLEFT, points.get(37)), new PointPosition(Position.UPRIGHT, points.get(34))},Line.EMPTY);
+        boxes[7][6] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(34)), new PointPosition(Position.UPRIGHT, points.get(35))},Line.EMPTY);
+        boxes[7][7] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(35))},Line.EMPTY);
+    }
+
+    public Box[][] getBoxesWithLines() {
 
         fillBoxList();
+        System.out.println("Backtracking starts");
+        long start = System.currentTimeMillis();
+        backtrack(0,0);
+        System.out.println("Finished Backtracking after " + (System.currentTimeMillis()-start) + " ms");
         return boxes;
     }
 
-    private boolean backtrack(int fieldnumber) {
+    private boolean backtrack(int column, int row) {
 
 
         for (int i = 1; i < 3; i++) {
-            boxes.get(fieldnumber).setLine(getEnumFromNumber(i));
+            boxes[row][column].setLine(getEnumFromNumber(i));
             if (debug)
-                System.out.println("    set box value to " + getEnumFromNumber(i).toString() + "in box: " + boxes.get(fieldnumber).getBoxNumber());
-            if (checkCriteriums(fieldnumber)) {
+                System.out.println("    set box value to " + getEnumFromNumber(i).toString() + "in box: " + column + " in row " + row);
+            if (checkCriteriums(column, row)) {
                 //wenn es möglich wäre so zu laufen, musst du zum nächsten möglichen kästchen laufen.
                 // das habe ich nur ausgelagert, weil ich Zeile für zeile ablaufe.
-                if (callNextBox(fieldnumber))
+                if (callNextBox(column, row))
                     return true;
                 //bevor du true returns, musst du ganz sicher gehen, dass auch das endkriterium erreicht ist
             }
-            boxes.get(fieldnumber).setLine(getEnumFromNumber(0));
+            boxes[row][column].setLine(getEnumFromNumber(0));
         }
 
 
         return false;
     }
 
-    private boolean callNextBox(int fieldnumber) {
-        int maxSize = boxes.size();
+    private boolean callNextBox(int column, int row) {
+        int maxSize = boxes.length;                     //muss noch angepasst werden
 
-        if (fieldnumber < maxSize)
-            return backtrack(fieldnumber + 1);
+        if (row < maxSize - 1 && column < maxSize - 1)
+            return backtrack(row, column + 1);
+
+        //if we are on the end of one row
+        if (row < maxSize - 1 && column == maxSize - 1)
+            return backtrack(row + 1, 0);
+
+        if (row == maxSize - 1 && column < maxSize - 1)
+            return backtrack(row, column + 1);
 
         return true;
     }
 
-    private boolean checkCriteriums(int column) {
+    private boolean checkCriteriums(int column, int row) {
 
         //hier musst du überprüfen, ob das kästchen so gewählt werden kann.
         //zur übersichtlichkeit habe ich das in einzelne methoden gepackt
         //bei dir würde ich es in "lookHorizontal", "lockVertical" auslagern
         if (debug)
-            System.out.println("    check criteriums (row:" + " column: " + column + ")");
-        if ()
+            System.out.println("    check criteriums (row: " + row + " column: " + column + ")");
+        if (!PointIsComplete(row, column))
             return false;
-        if (debug)
-            System.out.println("    uniqueNumberHorizontal: ok");
-        if ()
+        if (!FieldHasNoCircle(row, column))
             return false;
+
+        //TODO Regeln aufstellen
+
+        return true;
+    }
+
+    private boolean PointIsComplete(int row, int column) {
+
+        return true;
+    }
+
+    private boolean FieldHasNoCircle(int row, int column) {
 
         return true;
     }

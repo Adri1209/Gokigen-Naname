@@ -2,23 +2,16 @@ package Logic;
 
 public class Box {
 
-
-    private String boxNumber;
-    private Point[] point;
+    private PointPosition[] pointPositions;
     private Line line;
 
-    public Box(String boxNumber, Point[] point, Line line) {
-        this.boxNumber = boxNumber;
-        this.point = point;
+    public Box(PointPosition[] pointPositions, Line line) {
+        this.pointPositions = pointPositions;
         this.line = line;
     }
 
-    public String getBoxNumber() {
-        return boxNumber;
-    }
-
-    public Point[] getPoint() {
-        return point;
+    public PointPosition[] getPointPositions() {
+        return pointPositions;
     }
 
     public Line getLine() {
