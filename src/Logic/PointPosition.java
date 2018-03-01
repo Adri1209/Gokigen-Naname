@@ -9,4 +9,12 @@ public class PointPosition {
         this.position = position;
         this.point = point;
     }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public Point getPoint() {
+        return point;
+    }
 }
