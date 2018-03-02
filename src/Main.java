@@ -1,12 +1,14 @@
 import GUI.Dot;
 import GUI.Field;
 import GUI.Stroke;
+import Logic.Backtracking;
+import Logic.Box;
+import Logic.Line;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -18,6 +20,7 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 
     Button button;
     Scene scene;
+    Pane root;
 
     public static void main(String[] args) {
 
@@ -25,7 +28,7 @@ public class Main extends Application implements EventHandler<ActionEvent>{
     }
 
     private Parent createContent(){
-        Pane root = new Pane();
+        root = new Pane();
         root.setPrefSize(500,500);
 
         List<Field> fields = new ArrayList<>();
@@ -64,13 +67,31 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 
     @Override
     public void handle(ActionEvent event) {
-        if (event.getSource() == button){
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Start Gogiken Naname");
-            alert.setHeaderText("Gogiken Naname will be started");
-            alert.setContentText("This TextBox will be replaced by Algorithm");
-            alert.showAndWait();
+        Backtracking backtracking = new Backtracking();
+        Box [][] boxes = backtracking.getBoxesWithLines();
+        double xPosition = 50;
+        double yPosition = 50;
+
+        for (int i = 0; i< boxes.length; i++){
+            for (int j = 0; j<boxes[i].length; j++){
+                if (boxes[i][j].getLine() == Line.DOWNLEFTTOUPRIGHT){
+                    Stroke stroke = new Stroke(xPosition+50,yPosition,xPosition, yPosition+50);
+                    stroke.setTranslateX(xPosition);
+                    stroke.setTranslateY(yPosition);
+                    root.getChildren().add(stroke);
+                }
+                if (boxes[i][j].getLine() == Line.UPLEFTTODOWNRIGHT){
+                    Stroke stroke = new Stroke(xPosition,yPosition,xPosition+50, yPosition+50);
+                    stroke.setTranslateX(xPosition);
+                    stroke.setTranslateY(yPosition);
+                    root.getChildren().add(stroke);
+                }
+                xPosition += 50;
+            }
+
+            xPosition = 50;
+            yPosition += 50;
         }
     }
 
