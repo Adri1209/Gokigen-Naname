@@ -81,7 +81,7 @@ public class Backtracking {
 
         boxes[2][0] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(7)), new PointPosition(Position.DOWNRIGHT, points.get(12))}, Line.EMPTY);
         boxes[2][1] = new Box(new PointPosition[]{new PointPosition(Position.DOWNLEFT, points.get(12)), new PointPosition(Position.DOWNRIGHT, points.get(13))}, Line.EMPTY);
-        boxes[2][2] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT, points.get(8)), new PointPosition(Position.UPRIGHT, points.get(13))}, Line.EMPTY);
+        boxes[2][2] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT, points.get(8)), new PointPosition(Position.DOWNLEFT, points.get(13))}, Line.EMPTY);
         boxes[2][3] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(8)), new PointPosition(Position.UPRIGHT, points.get(9)), new PointPosition(Position.DOWNRIGHT, points.get(14))}, Line.EMPTY);
         boxes[2][4] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(9)), new PointPosition(Position.DOWNLEFT, points.get(14)), new PointPosition(Position.DOWNRIGHT, points.get(15))}, Line.EMPTY);
         boxes[2][5] = new Box(new PointPosition[]{new PointPosition(Position.UPRIGHT, points.get(10)), new PointPosition(Position.DOWNLEFT, points.get(15))}, Line.EMPTY);
@@ -136,7 +136,18 @@ public class Backtracking {
 
     public static void main(String[] args) {
         Backtracking backtracking = new Backtracking();
-        backtracking.getBoxesWithLines();
+        Box [] [] boxresult= backtracking.getBoxesWithLines();
+        for (int i = 0; i<boxresult.length; i++){
+            System.out.println("Row number " + (i+1));
+            System.out.println();
+            for (int j = 0; j< boxresult[i].length; j++){
+                System.out.println("Line is: " + boxresult[i][j].getLine().toString());
+            }
+        }
+        System.out.println();
+        for (Point point: backtracking.points){
+            System.out.println(point.getValue());
+        }
     }
 
     public Box[][] getBoxesWithLines() {
@@ -161,6 +172,9 @@ public class Backtracking {
                 // das habe ich nur ausgelagert, weil ich Zeile für zeile ablaufe.
                 if (callNextBox(row, column))
                     return true;
+                else {
+                    resetPointValues(row,column);
+                }
                 //bevor du true returns, musst du ganz sicher gehen, dass auch das endkriterium erreicht ist
             }
             boxes[row][column].setLine(getEnumFromNumber(0));
@@ -170,8 +184,36 @@ public class Backtracking {
         return false;
     }
 
+    private void resetPointValues(int row, int column){
+        Box actualBox = boxes[row][column];
+        Line line = actualBox.getLine();
+        PointPosition[] pointPositions = actualBox.getPointPositions();
+
+        if (line == Line.DOWNLEFTTOUPRIGHT) {
+
+            for (int i = 0; i < pointPositions.length; i++) {
+                if (pointPositions[i].getPosition() == Position.DOWNLEFT) {
+                    pointPositions[i].getPoint().setValue(pointPositions[i].getPoint().getValue() + 1);
+                }
+                if (pointPositions[i].getPosition() == Position.UPRIGHT) {
+                    pointPositions[i].getPoint().setValue(pointPositions[i].getPoint().getValue() + 1);
+                }
+            }
+        }
+        if (line == Line.UPLEFTTODOWNRIGHT) {
+            for (int i = 0; i < pointPositions.length; i++) {
+                if (pointPositions[i].getPosition() == Position.UPLEFT) {
+                    pointPositions[i].getPoint().setValue(pointPositions[i].getPoint().getValue() + 1);
+                }
+                if (pointPositions[i].getPosition() == Position.DOWNRIGHT) {
+                    pointPositions[i].getPoint().setValue(pointPositions[i].getPoint().getValue() + 1);
+                }
+            }
+        }
+    }
+
     private boolean callNextBox(int row, int column) {
-        int maxSize = boxes.length;                     //muss noch angepasst werden
+        int maxSize = boxes.length;
 
         if (row < maxSize - 1 && column < maxSize - 1)
             return backtrack(row, column + 1);
@@ -193,9 +235,9 @@ public class Backtracking {
         //bei dir würde ich es in "lookHorizontal", "lockVertical" auslagern
         if (debug)
             System.out.println("    check criteriums (row: " + row + " column: " + column + ")");
-        if (!PointIsComplete(row, column))
-            return false;
         if (!FieldHasNoCircle(row, column))
+            return false;
+        if (!PointIsComplete(row, column))
             return false;
 
         //TODO Regeln aufstellen
@@ -213,27 +255,50 @@ public class Backtracking {
 
         if (line == Line.DOWNLEFTTOUPRIGHT) {
 
+            Point pointDownLeft = null;
+            Point pointUpRight = null;
+
             for (int i = 0; i < pointPositions.length; i++) {
                 if (pointPositions[i].getPosition() == Position.DOWNLEFT) {
                     if (pointPositions[i].getPoint().getValue() == 0) return false;
-                    pointPositions[i].getPoint().setValue(pointPositions[i].getPoint().getValue() - 1);
+                    pointDownLeft = pointPositions[i].getPoint();
                 }
                 if (pointPositions[i].getPosition() == Position.UPRIGHT) {
                     if (pointPositions[i].getPoint().getValue() == 0) return false;
-                    pointPositions[i].getPoint().setValue(pointPositions[i].getPoint().getValue() - 1);
+                    pointUpRight = pointPositions[i].getPoint();
                 }
+
+            }
+
+            if (pointDownLeft != null){
+                pointDownLeft.setValue(pointDownLeft.getValue()-1);
+            }
+            if (pointUpRight != null){
+                pointUpRight.setValue(pointUpRight.getValue() - 1);
             }
         }
         if (line == Line.UPLEFTTODOWNRIGHT) {
+
+            Point pointUpLeft = null;
+            Point pointDownRight = null;
+
+
             for (int i = 0; i < pointPositions.length; i++) {
                 if (pointPositions[i].getPosition() == Position.UPLEFT) {
                     if (pointPositions[i].getPoint().getValue() == 0) return false;
-                    pointPositions[i].getPoint().setValue(pointPositions[i].getPoint().getValue() - 1);
+                    pointUpLeft = pointPositions[i].getPoint();
                 }
                 if (pointPositions[i].getPosition() == Position.DOWNRIGHT) {
                     if (pointPositions[i].getPoint().getValue() == 0) return false;
-                    pointPositions[i].getPoint().setValue(pointPositions[i].getPoint().getValue() - 1);
+                    pointDownRight = pointPositions[i].getPoint();
                 }
+            }
+
+            if (pointUpLeft != null){
+                pointUpLeft.setValue(pointUpLeft.getValue() - 1);
+            }
+            if (pointDownRight != null){
+                pointDownRight.setValue(pointDownRight.getValue() - 1);
             }
         }
 
