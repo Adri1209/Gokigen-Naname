@@ -134,22 +134,6 @@ public class Backtracking {
         boxes[7][7] = new Box(new PointPosition[]{new PointPosition(Position.UPLEFT, points.get(35))}, Line.EMPTY);
     }
 
-    public static void main(String[] args) {
-        Backtracking backtracking = new Backtracking();
-        Box [] [] boxresult= backtracking.getBoxesWithLines();
-        for (int i = 0; i<boxresult.length; i++){
-            System.out.println("Row number " + (i+1));
-            System.out.println();
-            for (int j = 0; j< boxresult[i].length; j++){
-                System.out.println("Line is: " + boxresult[i][j].getLine().toString());
-            }
-        }
-        System.out.println();
-        for (Point point: backtracking.points){
-            System.out.println(point.getValue());
-        }
-    }
-
     public Box[][] getBoxesWithLines() {
 
         fillBoxList();
@@ -168,14 +152,11 @@ public class Backtracking {
             if (debug)
                 System.out.println("    set box value to " + getEnumFromNumber(i).toString() + "in box: " + column + " in row " + row);
             if (checkCriteriums(row, column)) {
-                //wenn es möglich wäre so zu laufen, musst du zum nächsten möglichen kästchen laufen.
-                // das habe ich nur ausgelagert, weil ich Zeile für zeile ablaufe.
                 if (callNextBox(row, column))
                     return true;
                 else {
                     resetPointValues(row,column);
                 }
-                //bevor du true returns, musst du ganz sicher gehen, dass auch das endkriterium erreicht ist
             }
             boxes[row][column].setLine(getEnumFromNumber(0));
         }
@@ -230,9 +211,6 @@ public class Backtracking {
 
     private boolean checkCriteriums(int row, int column) {
 
-        //hier musst du überprüfen, ob das kästchen so gewählt werden kann.
-        //zur übersichtlichkeit habe ich das in einzelne methoden gepackt
-        //bei dir würde ich es in "lookHorizontal", "lockVertical" auslagern
         if (debug)
             System.out.println("    check criteriums (row: " + row + " column: " + column + ")");
         if (!FieldHasNoCircle(row, column))
@@ -250,8 +228,6 @@ public class Backtracking {
         Box actualBox = boxes[row][column];
         Line line = actualBox.getLine();
         PointPosition[] pointPositions = actualBox.getPointPositions();
-
-        //TODO Zahl zurücksetzen
 
         if (line == Line.DOWNLEFTTOUPRIGHT) {
 
