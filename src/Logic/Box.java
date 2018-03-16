@@ -5,9 +5,9 @@ public class Box {
     private PointPosition[] pointPositions;
     private Line line;
 
-    public Box(PointPosition[] pointPositions, Line line) {
+    public Box(PointPosition[] pointPositions) {
         this.pointPositions = pointPositions;
-        this.line = line;
+        this.line = Line.EMPTY;
     }
 
     public PointPosition[] getPointPositions() {
