@@ -213,11 +213,11 @@ public class Backtracking {
 
         if (debug)
             System.out.println("    check criteriums (row: " + row + " column: " + column + ")");
-        if (FieldHasNoCircle(row, column)) return false;        //TODO Circle Method doesn't work correctly
+
+        //if (FieldHasNoCircle(row, column)) return false;  // Hier wäre die Überprüfung, ob es zu einer Schleife kommt (wie besprochen). Allerdings erhalte ich einen StackOverflowError. Mein Programm ist daher unvollständig!
+
         if (!PointIsComplete(row, column))
             return false;
-
-        //TODO Regeln aufstellen
 
         return true;
     }
